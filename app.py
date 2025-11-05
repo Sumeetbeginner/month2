@@ -61,7 +61,7 @@ def ensure_client():
 
     if not api_key:
         # Temporary direct key here
-        api_key = "AIzaSyCXh8Obn4E9X9DfFwwb7cuVXwHJ08iiYF0"  
+        api_key = ""  
 
     genai.configure(api_key=api_key)
     return genai
