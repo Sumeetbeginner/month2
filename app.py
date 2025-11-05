@@ -153,21 +153,19 @@ if "embedder" not in st.session_state:
 if "client" not in st.session_state:
     st.session_state.client = ensure_client()
 if "chroma_client" not in st.session_state or reset_db:
+    # Detect Streamlit Cloud
     if "STREAMLIT_RUNTIME" in os.environ:
-        st.session_state.chroma_client = chromadb.Client(
-            Settings(
-                chroma_db_impl="duckdb+memory",
-                anonymized_telemetry=False
-            )
-        )
+        # Use ephemeral in-memory vector DB
+        st.session_state.chroma_client = chromadb.Client()
     else:
-        st.session_state.chroma_client = chromadb.Client(
-            Settings(
-                chroma_db_impl="duckdb+parquet",
-                persist_directory=persist_dir,
-                anonymized_telemetry=False
-            )
-        )
+        # Local persistent storage
+        st.session_state.chroma_client = chromadb.PersistentClient(path=persist_dir)
+
+if "collection" not in st.session_state or reset_db:
+    st.session_state.collection = st.session_state.chroma_client.get_or_create_collection(
+        name="rag_demo",
+        metadata={"hnsw:space": "cosine"}   # keeps cosine similarity working
+    )
 if "collection" not in st.session_state or reset_db:
     st.session_state.collection = st.session_state.chroma_client.get_or_create_collection("rag_demo")
 
