@@ -21,6 +21,8 @@ from chromadb.config import Settings
 
 # LLM (Gemini)
 import google.generativeai as genai
+import uuid
+
 
 
 # -----------------------------
@@ -143,7 +145,8 @@ with st.sidebar:
     st.divider()
     st.caption("Vector DB")
     persist_dir = st.text_input("Chroma persist directory", value=".chromadb")
-    reset_db = st.button("Reset vector DB (delete collection)")
+    reset_db = st.button("Reset vector DB (clear memory)")
+
 
 # -----------------------------
 # Session State
@@ -256,7 +259,7 @@ if ingest_clicked:
                 ids = []
                 metadatas = []
                 for ch in chunks:
-                    cid = f"{hash_text(src_name)}-{hash_text(ch)}"
+                    cid = str(uuid.uuid4())
                     ids.append(cid)
                     metadatas.append({"source": src_name})
 
