@@ -153,7 +153,7 @@ if "embedder" not in st.session_state:
 if "client" not in st.session_state:
     st.session_state.client = ensure_client()
 if "chroma_client" not in st.session_state or reset_db:
-    st.session_state.chroma_client = chromadb.Client(Settings(persist_directory=persist_dir, is_persistent=True))
+    st.session_state.chroma_client = chromadb.Client(Settings(chroma_db_impl="duckdb+memory", persist_directory=None))
 if "collection" not in st.session_state or reset_db:
     st.session_state.collection = st.session_state.chroma_client.get_or_create_collection("rag_demo")
 
